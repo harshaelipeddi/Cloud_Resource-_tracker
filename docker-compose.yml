@@ -30,7 +30,7 @@ services:
       TRACKER_DB:            /data/cloud_resources.db
       LOG_LEVEL:             ${LOG_LEVEL:-INFO}
     volumes:
-      - db_data:/data
+      - .:/data
     command: ["python", "tracker.py"]
 
   # ── Grafana ──────────────────────────────────────────────────
@@ -48,10 +48,9 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
-      - db_data:/data:ro            # read-only view of the SQLite DB
+      - .:/data:ro            # read-only view of the SQLite DB on the host
     depends_on:
       - tracker
 
 volumes:
-  db_data:
   grafana_data:
