@@ -5,7 +5,7 @@ Collects AWS resource metrics (EC2, S3, RDS, IAM, VPC) and stores them in
 SQLite. Designed to be run on a schedule (cron / Jenkins) and visualised in
 Grafana via the SQLite datasource plugin.
 
-Author : Elipeddi Harshavardhan
+Author :  Elipeddi Harshavardhan
 """
 
 from __future__ import annotations

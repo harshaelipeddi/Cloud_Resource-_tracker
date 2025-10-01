@@ -26,7 +26,7 @@ def tmp_db(tmp_path):
     return db
 
 
-# ── Database tests ─────────────────────────────────────────────────────────────
+# ── Database  tests ─────────────────────────────────────────────────────────────
 
 def test_init_db_creates_tables(tmp_db):
     conn = sqlite3.connect(tmp_db)

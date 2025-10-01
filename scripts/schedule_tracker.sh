@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env  bash  
 # schedule_tracker.sh
 # Adds a cron job to run the tracker every 15 minutes.
 # Run once: bash scripts/schedule_tracker.sh

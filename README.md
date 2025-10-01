@@ -165,7 +165,7 @@ cloud_resource_tracker/
 
 ---
 
-## Tech Stack
+## Tech  Stack
 
 - **Python 3.11** + **boto3** — AWS data collection
 - **SQLite** (WAL mode) — lightweight time-series storage

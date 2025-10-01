@@ -23,7 +23,7 @@ GROUP BY state
 ORDER BY count DESC;
 
 
--- ── PANEL 3: EC2 Instances by Type (latest snapshot) ────────────────────────
+-- ── PANEL 3: ec2 Instances by Type (latest snapshot) ────────────────────────
 SELECT
     instance_type,
     COUNT(*) AS count

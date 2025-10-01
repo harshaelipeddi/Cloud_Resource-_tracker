@@ -3,7 +3,7 @@ FROM python:3.11-slim
 LABEL maintainer="Elipeddi Harshavardhan <harshaelipeddi15@gmail.com>"
 LABEL description="AWS Cloud Resource Tracker"
 
-# System deps
+# System  deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
         gcc \
         libsqlite3-dev \
