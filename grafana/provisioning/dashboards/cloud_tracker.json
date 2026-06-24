@@ -1,0 +1,103 @@
+{
+  "__inputs": [],
+  "__requires": [
+    { "type": "datasource", "id": "frser-sqlite-datasource", "name": "SQLite", "version": "1.0.0" }
+  ],
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "sqlite" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] },
+          "unit": "short" },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 0,  "y": 0 }, "id": 1,
+      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "EC2 Instances",
+      "type": "stat",
+      "targets": [{ "rawQueryText": "SELECT COUNT(*) AS value FROM ec2_instances WHERE recorded_at=(SELECT MAX(recorded_at) FROM ec2_instances);", "refId": "A", "queryType": "table" }]
+    },
+    {
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "sqlite" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 }, "id": 2,
+      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "S3 Buckets",
+      "type": "stat",
+      "targets": [{ "rawQueryText": "SELECT COUNT(*) AS value FROM s3_buckets WHERE recorded_at=(SELECT MAX(recorded_at) FROM s3_buckets);", "refId": "A", "queryType": "table" }]
+    },
+    {
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "sqlite" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 }, "id": 3,
+      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "RDS Instances",
+      "type": "stat",
+      "targets": [{ "rawQueryText": "SELECT COUNT(*) AS value FROM rds_instances WHERE recorded_at=(SELECT MAX(recorded_at) FROM rds_instances);", "refId": "A", "queryType": "table" }]
+    },
+    {
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "sqlite" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 }, "id": 4,
+      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "VPCs",
+      "type": "stat",
+      "targets": [{ "rawQueryText": "SELECT COUNT(*) AS value FROM vpcs WHERE recorded_at=(SELECT MAX(recorded_at) FROM vpcs);", "refId": "A", "queryType": "table" }]
+    },
+    {
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "sqlite" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "hideFrom": { "tooltip": false, "viz": false, "legend": false } } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 4 }, "id": 5,
+      "options": { "displayLabels": ["percent"], "legend": { "displayMode": "table", "placement": "right", "values": ["value"] }, "pieType": "pie" },
+      "title": "EC2 States",
+      "type": "piechart",
+      "targets": [{ "rawQueryText": "SELECT state, COUNT(*) AS value FROM ec2_instances WHERE recorded_at=(SELECT MAX(recorded_at) FROM ec2_instances) GROUP BY state ORDER BY value DESC;", "refId": "A", "queryType": "table" }]
+    },
+    {
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "sqlite" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "hideFrom": { "tooltip": false, "viz": false, "legend": false } } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 4 }, "id": 6,
+      "options": { "displayLabels": ["percent"], "legend": { "displayMode": "table", "placement": "right", "values": ["value"] }, "pieType": "pie" },
+      "title": "RDS Engines",
+      "type": "piechart",
+      "targets": [{ "rawQueryText": "SELECT engine, COUNT(*) AS value FROM rds_instances WHERE recorded_at=(SELECT MAX(recorded_at) FROM rds_instances) GROUP BY engine ORDER BY value DESC;", "refId": "A", "queryType": "table" }]
+    },
+    {
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "sqlite" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "custom": { "align": "auto", "displayMode": "color-text" }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 12 }, "id": 7,
+      "options": { "footer": { "show": false }, "showHeader": true },
+      "title": "VPC Overview",
+      "type": "table",
+      "targets": [{ "rawQueryText": "SELECT vpc_id, cidr_block, state, CASE is_default WHEN 1 THEN 'Yes' ELSE 'No' END AS is_default, subnet_count, region FROM vpcs WHERE recorded_at=(SELECT MAX(recorded_at) FROM vpcs) ORDER BY is_default DESC, subnet_count DESC;", "refId": "A", "queryType": "table" }]
+    },
+    {
+      "datasource": { "type": "frser-sqlite-datasource", "uid": "sqlite" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "custom": { "align": "auto" }, "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 20 }, "id": 8,
+      "options": { "footer": { "show": false }, "showHeader": true },
+      "title": "Collection Run History",
+      "type": "table",
+      "targets": [{ "rawQueryText": "SELECT id, started_at, finished_at, ROUND((JULIANDAY(finished_at)-JULIANDAY(started_at))*86400,2) AS duration_sec, status, COALESCE(error_msg,'—') AS error FROM collection_runs ORDER BY started_at DESC LIMIT 20;", "refId": "A", "queryType": "table" }]
+    }
+  ],
+  "refresh": "5m",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["aws", "cloud", "devops"],
+  "templating": { "list": [] },
+  "time": { "from": "now-24h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Cloud Resource Tracker",
+  "uid": "cloud-resource-tracker",
+  "version": 1
+}

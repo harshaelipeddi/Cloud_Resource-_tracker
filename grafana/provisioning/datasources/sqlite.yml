@@ -1,0 +1,13 @@
+apiVersion: 1
+
+datasources:
+  - name: CloudResourceDB
+    type: frser-sqlite-datasource
+    uid: sqlite
+    access: proxy
+    # Path inside the Grafana container (matched by the Docker volume mount)
+    url: /data/cloud_resources.db
+    isDefault: true
+    editable: true
+    jsonData:
+      path: /data/cloud_resources.db

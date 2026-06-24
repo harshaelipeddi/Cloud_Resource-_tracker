@@ -1,0 +1,57 @@
+version: "3.9"
+
+# ─────────────────────────────────────────────────────────────
+#  Cloud Resource Tracker — Docker Compose
+#
+#  Services:
+#    tracker  – Python collector (runs once, then exits)
+#    grafana  – Dashboard UI on http://localhost:3000
+#
+#  Usage:
+#    cp .env.example .env          # fill in AWS creds
+#    docker-compose up -d grafana  # start Grafana
+#    docker-compose run --rm tracker  # collect once
+#    # OR schedule with cron (see README)
+# ─────────────────────────────────────────────────────────────
+
+services:
+
+  # ── Collector ────────────────────────────────────────────────
+  tracker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cloud_tracker
+    restart: "no"           # run-once; schedule externally
+    environment:
+      AWS_ACCESS_KEY_ID:     ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION:            ${AWS_REGION:-us-east-1}
+      TRACKER_DB:            /data/cloud_resources.db
+      LOG_LEVEL:             ${LOG_LEVEL:-INFO}
+    volumes:
+      - db_data:/data
+    command: ["python", "tracker.py"]
+
+  # ── Grafana ──────────────────────────────────────────────────
+  grafana:
+    image: grafana/grafana:10.4.2
+    container_name: cloud_grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER:     ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_INSTALL_PLUGINS:         frser-sqlite-datasource
+      GF_PATHS_PROVISIONING:      /etc/grafana/provisioning
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - db_data:/data:ro            # read-only view of the SQLite DB
+    depends_on:
+      - tracker
+
+volumes:
+  db_data:
+  grafana_data:
